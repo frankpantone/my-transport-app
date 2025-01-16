@@ -1,0 +1,166 @@
+<%- include('layouts/header') %>
+
+<h1>Admin Dashboard</h1>
+
+<!-- MY ORDERS BOX -->
+<div class="mb-4 border p-3">
+  <h3>My Orders</h3>
+  <!-- Example table for My Orders -->
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Request #</th>
+        <th>Status</th>
+        <th>Price</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (myOrders && myOrders.length > 0) { %>
+        <% myOrders.forEach(order => { %>
+          <tr>
+            <td>
+              <a href="/admin/orders/<%= order.requestNumber %>">
+                <%= order.requestNumber %>
+              </a>
+            </td>
+            <td><%= order.status %></td>
+            <td>$<%= order.price %></td>
+            <td>
+              <!-- Possibly some quick actions here if you want -->
+              <!-- e.g. "Set Price", "Re-quote" buttons, or link to detail -->
+            </td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="4">No orders found in this category.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <!-- Display pagination for MY ORDERS (if desired) 
+       But we're showing a single pagination for the entire page below, 
+       so we might skip a separate one here. -->
+</div>
+
+<!-- SUBMITTED ORDERS BOX (Unassigned, status=Submitted) -->
+<div class="mb-4 border p-3">
+  <h3>Submitted Orders</h3>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Request #</th>
+        <th>Status</th>
+        <th>Price</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (submittedOrders && submittedOrders.length > 0) { %>
+        <% submittedOrders.forEach(order => { %>
+          <tr>
+            <td>
+              <a href="/admin/orders/<%= order.requestNumber %>">
+                <%= order.requestNumber %>
+              </a>
+            </td>
+            <td><%= order.status %></td>
+            <td>$<%= order.price %></td>
+            <td>
+              <!-- e.g. "Claim" link or button could appear here, 
+                   but main action is in order detail -->
+            </td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="4">No orders found in this category.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<!-- CLAIMED ORDERS BOX -->
+<div class="mb-4 border p-3">
+  <h3>Claimed Orders</h3>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Request #</th>
+        <th>Assigned To</th>
+        <th>Status</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (claimedOrders && claimedOrders.length > 0) { %>
+        <% claimedOrders.forEach(order => { %>
+          <tr>
+            <td>
+              <a href="/admin/orders/<%= order.requestNumber %>">
+                <%= order.requestNumber %>
+              </a>
+            </td>
+            <td>
+              <!-- Show the owner's email or name -->
+              <%= order.owner ? order.owner.email : 'Unassigned' %>
+            </td>
+            <td><%= order.status %></td>
+            <td>$<%= order.price %></td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="4">No orders found in this category.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<!-- PAGINATION for the entire page 
+     We assume "currentPage" is the same for all boxes. 
+     myOrdersPages, submittedPages, claimedPages are the total # of pages 
+     for each query. You can decide how to handle them. 
+     If you want one combined set of pages, you might take the MAX of 
+     (myOrdersPages, submittedPages, claimedPages). 
+-->
+<% 
+  const maxPages = Math.max(myOrdersPages, submittedPages, claimedPages) || 1;
+%>
+<div class="pagination-controls">
+  <nav>
+    <ul class="pagination">
+      <% if (currentPage > 1) { %>
+        <li class="page-item">
+          <a class="page-link" href="/admin?page=<%= currentPage - 1 %>">Previous</a>
+        </li>
+      <% } else { %>
+        <li class="page-item disabled">
+          <span class="page-link">Previous</span>
+        </li>
+      <% } %>
+
+      <% for (let i = 1; i <= maxPages; i++) { %>
+        <li class="page-item <%= (i === currentPage) ? 'active' : '' %>">
+          <a class="page-link" href="/admin?page=<%= i %>"><%= i %></a>
+        </li>
+      <% } %>
+
+      <% if (currentPage < maxPages) { %>
+        <li class="page-item">
+          <a class="page-link" href="/admin?page=<%= currentPage + 1 %>">Next</a>
+        </li>
+      <% } else { %>
+        <li class="page-item disabled">
+          <span class="page-link">Next</span>
+        </li>
+      <% } %>
+    </ul>
+  </nav>
+</div>
+
+<%- include('layouts/footer') %>

@@ -1,0 +1,65 @@
+<%- include('layouts/header') %>
+
+<h1>Edit Transport Request</h1>
+<form action="/forms/edit/<%= form._id %>" method="POST" class="row g-3">
+  <div class="col-md-6">
+    <label for="pickupLocation" class="form-label">Pickup Location</label>
+    <input 
+      type="text"
+      name="pickupLocation"
+      id="pickupLocation"
+      class="form-control"
+      required
+      value="<%= form.pickupLocation %>"
+    >
+  </div>
+  <div class="col-md-6">
+    <label for="deliveryLocation" class="form-label">Delivery Location</label>
+    <input 
+      type="text"
+      name="deliveryLocation"
+      id="deliveryLocation"
+      class="form-control"
+      required
+      value="<%= form.deliveryLocation %>"
+    >
+  </div>
+  <div class="col-md-6">
+    <label for="vin" class="form-label">VIN</label>
+    <input 
+      type="text"
+      name="vin"
+      id="vin"
+      class="form-control"
+      required
+      value="<%= form.vin %>"
+    >
+  </div>
+  <div class="col-md-3">
+    <label for="make" class="form-label">Make</label>
+    <input
+      type="text"
+      name="make"
+      id="make"
+      class="form-control"
+      required
+      value="<%= form.make %>"
+    >
+  </div>
+  <div class="col-md-3">
+    <label for="model" class="form-label">Model</label>
+    <input
+      type="text"
+      name="model"
+      id="model"
+      class="form-control"
+      required
+      value="<%= form.model %>"
+    >
+  </div>
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary">Update</button>
+  </div>
+</form>
+
+<%- include('layouts/footer') %>

@@ -1,0 +1,184 @@
+<%- include('layouts/header') %>
+
+<h1>Submit New Transport Request</h1>
+
+<form action="/forms/new" method="POST" class="row g-3">
+
+  <!-- Company Info -->
+  <div class="col-md-6">
+    <label>Company Name</label>
+    <input 
+      type="text" 
+      name="companyName" 
+      class="form-control" 
+      required 
+      value="<%= companyName %>"
+    >
+  </div>
+  <div class="col-md-6">
+    <label>Company Address</label>
+    <input 
+      type="text" 
+      name="companyAddress" 
+      class="form-control" 
+      required 
+      value="<%= companyAddress %>"
+    >
+  </div>
+
+  <!-- Pickup -->
+  <h3>Pickup Details</h3>
+  <div class="col-md-6">
+    <label>Pickup Location</label>
+    <input 
+      type="text" 
+      name="pickupLocation" 
+      class="form-control" 
+      required
+    >
+  </div>
+  <div class="col-md-6 border p-2">
+    <label>Pickup Contact Name (required)</label>
+    <input 
+      type="text" 
+      name="pickupContact[name]" 
+      class="form-control mb-2"
+      required
+    >
+    <label>Pickup Contact Phone (required)</label>
+    <input 
+      type="text" 
+      name="pickupContact[phone]" 
+      class="form-control mb-2"
+      required
+    >
+    <label>Pickup Contact Email (optional)</label>
+    <input 
+      type="email" 
+      name="pickupContact[email]" 
+      class="form-control"
+    >
+  </div>
+
+  <!-- Delivery -->
+  <h3>Delivery Details</h3>
+  <div class="col-md-6">
+    <label>Delivery Location</label>
+    <input 
+      type="text" 
+      name="deliveryLocation" 
+      class="form-control"
+      required
+    >
+  </div>
+  <div class="col-md-6 border p-2">
+    <label>Delivery Contact Name (required)</label>
+    <input 
+      type="text" 
+      name="deliveryContact[name]" 
+      class="form-control mb-2" 
+      required
+    >
+    <label>Delivery Contact Phone (required)</label>
+    <input 
+      type="text" 
+      name="deliveryContact[phone]" 
+      class="form-control mb-2" 
+      required
+    >
+    <label>Delivery Contact Email (optional)</label>
+    <input 
+      type="email" 
+      name="deliveryContact[email]" 
+      class="form-control"
+    >
+  </div>
+
+  <!-- Vehicles -->
+  <h3>Vehicles</h3>
+  <div class="col-12" id="vehiclesContainer">
+    <!-- First row of VIN, Make, Model -->
+    <div class="row g-2 mb-2 vehicleRow">
+      <div class="col-md-3">
+        <label>VIN</label>
+        <input 
+          type="text" 
+          name="vehicles[0][vin]" 
+          class="form-control"
+        >
+      </div>
+      <div class="col-md-3">
+        <label>Make</label>
+        <input 
+          type="text" 
+          name="vehicles[0][make]" 
+          class="form-control"
+        >
+      </div>
+      <div class="col-md-3">
+        <label>Model</label>
+        <input 
+          type="text" 
+          name="vehicles[0][model]" 
+          class="form-control"
+        >
+      </div>
+      <div class="col-md-3 d-flex align-items-end">
+        <button 
+          type="button" 
+          class="btn btn-secondary lookupVinBtn"
+        >
+          Lookup VIN
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Button to add more VIN rows -->
+  <div class="col-12 mb-3">
+    <button 
+      type="button" 
+      class="btn btn-info" 
+      id="addVehicleBtn"
+    >
+      Add Another VIN
+    </button>
+  </div>
+
+  <!-- Submit Button -->
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary">
+      Submit New Request
+    </button>
+  </div>
+
+</form>
+
+<script>
+// Simple JS to clone the "vehicleRow" for more VINs
+document.getElementById('addVehicleBtn').addEventListener('click', () => {
+  const container = document.getElementById('vehiclesContainer');
+  const existingRows = container.querySelectorAll('.vehicleRow');
+  const nextIndex = existingRows.length; // e.g. if there's 1 row, nextIndex=1
+
+  // Clone the first row
+  const firstRow = existingRows[0];
+  const newRow = firstRow.cloneNode(true);
+
+  // Update input names from vehicles[0] to vehicles[nextIndex]
+  newRow.querySelectorAll('input').forEach((input) => {
+    // e.g. 'vehicles[0][vin]' => 'vehicles[1][vin]'
+    const nameAttr = input.getAttribute('name');
+    if (nameAttr) {
+      const updatedName = nameAttr.replace('[0]', `[${nextIndex}]`);
+      input.setAttribute('name', updatedName);
+      // Also clear the value
+      input.value = '';
+    }
+  });
+
+  container.appendChild(newRow);
+});
+</script>
+
+<%- include('layouts/footer') %>

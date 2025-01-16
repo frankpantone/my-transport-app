@@ -1,0 +1,47 @@
+<%- include('layouts/header') %>
+
+<h1>Order Detail - <%= order.requestNumber %></h1>
+
+<p>User: <%= order.user ? order.user.email : 'N/A' %></p>
+<p>Company: <%= order.companyName %> / <%= order.companyAddress %></p>
+<p>Pickup: <%= order.pickupLocation %></p>
+<p>Delivery: <%= order.deliveryLocation %></p>
+<p>VIN: <%= order.vin %> | Make: <%= order.make %> | Model: <%= order.model %></p>
+<p>Status: <%= order.status %></p>
+<p>Price: $<%= order.price %></p>
+<p>Paid: <%= order.isPaid ? 'Yes' : 'No' %></p>
+<p>Owner: <%= order.owner ? order.owner.email : 'None' %></p>
+
+<!-- Set Price -->
+<% if (!order.isPaid) { %>
+  <form action="/admin/set-price/<%= order._id %>" method="POST" class="mb-3">
+    <div class="mb-1">
+      <label>Price</label>
+      <input type="number" name="price" class="form-control" step="0.01" value="<%= order.price %>">
+    </div>
+    <button type="submit" class="btn btn-success">Set Price (Quote)</button>
+  </form>
+<% } %>
+
+<!-- Claim or Reassign -->
+<% if (!order.owner) { %>
+  <form action="/admin/claim/<%= order._id %>" method="POST" class="mb-3">
+    <button type="submit" class="btn btn-primary">Claim This Order</button>
+  </form>
+<% } else { %>
+  <!-- Reassign (requires a list of admins, or a manual approach) -->
+  <form action="/admin/reassign/<%= order._id %>" method="POST" class="mb-3">
+    <label>Re-assign to another admin (example)</label>
+    <input type="text" name="newOwnerId" placeholder="Enter admin's user _id" class="form-control mb-2">
+    <button type="submit" class="btn btn-warning">Reassign</button>
+  </form>
+<% } %>
+
+<!-- Re-quote if not paid -->
+<% if (!order.isPaid) { %>
+  <form action="/admin/requote/<%= order._id %>" method="POST" class="mb-3">
+    <button type="submit" class="btn btn-danger">Re-quote</button>
+  </form>
+<% } %>
+
+<%- include('layouts/footer') %>

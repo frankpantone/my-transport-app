@@ -1,0 +1,44 @@
+<%- include('layouts/header') %>
+
+<h1>My Dashboard</h1>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Request Number</th>
+      <th>Pickup Location</th>
+      <th>Delivery Location</th>
+      <th>Status</th>
+      <th>Price</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% forms.forEach(form => { %>
+      <tr>
+        <td><%= form.requestNumber %></td>
+        <td><%= form.pickupLocation %></td>
+        <td><%= form.deliveryLocation %></td>
+        <td><%= form.status %></td>
+        <td>
+          <% if (form.price) { %>
+            $<%= form.price.toFixed(2) %>
+          <% } else { %>
+            Not set
+          <% } %>
+        </td>
+        <td>
+          <% if (form.status === 'Quoted' && form.price) { %>
+            <form action="/forms/pay-credit-card/<%= form._id %>" method="POST" class="d-inline">
+              <button type="submit" class="btn btn-sm btn-success">Pay</button>
+            </form>
+          <% } else { %>
+            <span class="text-muted">No action available</span>
+          <% } %>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+
+<%- include('layouts/footer') %>
